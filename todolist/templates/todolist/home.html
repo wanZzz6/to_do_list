@@ -43,20 +43,20 @@
             </thead>
             <tbody class="no-underline">
             {% for thing in 清单 %}
-                {% if thing.已完成 %}
+                {% if thing.done %}
                     <tr class="table-dark">
-                        <th class="text-dark" scope="row">{{ forloop.counter }}</th>
-                        <td class="text-dark" id="line-through">{{ thing.待办事项 }}</td>
+                        <th class="text-dark" scope="row">{{ thing.id }}</th>
+                        <td class="text-dark" id="line-through">{{ thing.thing }}</td>
                         <td class="text-secondary">不可编辑</td>
                         <td>
-                            <form method="post" action="{% url 'todolist:划掉' forloop.counter %}">
+                            <form method="post" action="{% url 'todolist:划掉' thing.id %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="完成状态" value="未完成">
                                 <button type="submit" class="btn btn-primary btn-sm">撤销</button>
                             </form>
                         </td>
                         <td>
-                            <form method="post" action="{% url 'todolist:删除' forloop.counter %}">
+                            <form method="post" action="{% url 'todolist:删除' thing.id %}">
                                 {% csrf_token %}
                                 <button class="btn btn-danger  btn-sm">删除</button>
                             </form>
@@ -64,15 +64,15 @@
                     </tr>
                 {% else %}
                     <tr>
-                    <th scope="row">{{ forloop.counter }}</th>
-                    <td>{{ thing.待办事项 }}</td>
+                    <th scope="row">{{ thing.id }}</th>
+                    <td>{{ thing.thing }}</td>
                     <td>
-                        <a class="text-success" href="{% url 'todolist:编辑' forloop.counter %}">
+                        <a class="text-success" href="{% url 'todolist:编辑' thing.id %}">
                             <button type="submit" class="btn btn-primary btn-sm">编辑</button>
                         </a>
                     </td>
                     <td>
-                        <form method="post" action="{% url 'todolist:划掉' forloop.counter %}">
+                        <form method="post" action="{% url 'todolist:划掉' thing.id %}">
                             {% csrf_token %}
                             <input type="hidden" name="完成状态" value="已完成">
                             <button class="btn btn-primary btn-sm">划掉</button>
@@ -80,10 +80,10 @@
                     </td>
                     <td>
 
-                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">删除</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal{{ thing.id }}">删除</button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                        <div class="modal fade" id="exampleModal{{ thing.id }}" tabindex="-1" role="dialog"
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -94,12 +94,12 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        确定要删除 <strong>未办事项:{{ thing.待办事项 }}</strong>吗?
+                                        确定要删除 <strong>未办事项:{{ thing.thing }}</strong>吗?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消
                                         </button>
-                                        <form method="post" action="{% url 'todolist:删除' forloop.counter %}">
+                                        <form method="post" action="{% url 'todolist:删除' thing.id %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-primary">确认</button>
                                         </form>
